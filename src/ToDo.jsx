@@ -4,7 +4,8 @@ import { EventEmitter } from "events";
 
 export class ToDo extends Component {
   state = {
-    todos: undefined
+    todos: undefined,
+    text: ""   //jel bi moglo kako drugacije da dodajemo direktno iz inputa u funkciju newItem
   };
 
   componentDidMount() {
@@ -12,7 +13,7 @@ export class ToDo extends Component {
       .then(response => response.json())
       .then(json =>
         this.setState({
-          todos: json,
+          todos: json
         })
       )
       .catch(error => console.log(error));
@@ -33,34 +34,38 @@ export class ToDo extends Component {
 
   clearCompleted = () => {
     const { todos } = this.state;
-    const result = todos? todos.filter(item => item.completed === false) :"";
+    const result = todos ? todos.filter(item => item.completed === false) : "";
     this.setState({
-      todos:result
-    })
+      todos: result
+    });
   };
   newItem = event => {
-   
-  };
- updateInput = event => {
-  const { todos } = this.state;
-  const addingItem = todos.slice();
-  const uuidv1 = require('uuid/v1');
+    const { todos } = this.state;
+    const { text } = this.state;
+    const addingItem = todos.slice();
+    const uuidv1 = require("uuid/v1");
     uuidv1();
-  const newItem = {
-    userId: 1,
-    id: uuidv1(),
-    title: event.target.value,
-    completed: false
-  }
-  addingItem.push(newItem);
-  this.setState({
-    todos:addingItem,
-  })
-  }
+    const newItem = {
+      userId: 1,
+      id: uuidv1(),
+      title: text,
+      completed: false
+    };
+    addingItem.push(newItem);
+    this.setState({
+      todos: addingItem
+    });
+  };
+  updateInput = event => {
+    let text = event.target.value;
+    this.setState({
+      text: text
+    });
+  };
 
   render() {
     const { todos } = this.state;
-    
+
     return (
       <main className="main wrapper">
         <header className="header">
@@ -69,7 +74,9 @@ export class ToDo extends Component {
         </header>
         <div className="new">
           <input onChange={this.updateInput} className="input" type="text" />
-          <button onClick={this.newItem} className="add btn">Add</button>
+          <button onClick={this.newItem} className="add btn">
+            Add
+          </button>
         </div>
         <nav>
           <ul className="filter-list">
@@ -96,7 +103,7 @@ export class ToDo extends Component {
         <div className="list">
           {todos
             ? todos.map(item => (
-                <div 
+                <div
                   onClick={this.toggleFinished}
                   data-clicked-id={item.id}
                   key={item.id}
