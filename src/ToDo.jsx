@@ -39,18 +39,7 @@ export class ToDo extends Component {
     })
   };
   newItem = event => {
-    const { todos } = this.state;
-    const addingItem = todos.slice();
-    const newItem = {
-      userId: 1,
-      id: 201,
-      title: event.target.value,
-      completed: false
-    }
-    addingItem.push(newItem);
-    this.setState({
-      todos:addingItem
-    })
+   
   };
  updateInput = event => {
   const { todos } = this.state;
@@ -107,7 +96,7 @@ export class ToDo extends Component {
         <div className="list">
           {todos
             ? todos.map(item => (
-                <div
+                <div 
                   onClick={this.toggleFinished}
                   data-clicked-id={item.id}
                   key={item.id}
