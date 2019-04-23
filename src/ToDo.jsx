@@ -24,13 +24,17 @@ export class ToDo extends Component {
     const clickedIndex = todos.findIndex(
       item => item.id === parseInt(clickedId)
     );
-
     todos[clickedIndex].completed = !todos[clickedIndex].completed;
-
     this.setState({
       todos: todos
     });
-  };
+  }
+  clearCompleted() {           //tu javlja error 
+    const { todos } = this.state;
+    const result = todos.filter(item => item.completed==="false");
+    console.log(result);
+    
+  }
 
   render() {
     const { todos } = this.state;
@@ -61,6 +65,9 @@ export class ToDo extends Component {
             </li>
             <li>
               <button>Pending</button>
+            </li>
+            <li>
+              <button onClick={this.clearCompleted}>Clear Completed</button>
             </li>
           </ul>
         </nav>
