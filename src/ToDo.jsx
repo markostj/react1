@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
+import { EventEmitter } from "events";
 
 export class ToDo extends Component {
   state = {
@@ -11,7 +12,7 @@ export class ToDo extends Component {
       .then(response => response.json())
       .then(json =>
         this.setState({
-          todos: json
+          todos: json,
         })
       )
       .catch(error => console.log(error));
@@ -28,17 +29,49 @@ export class ToDo extends Component {
     this.setState({
       todos: todos
     });
-  }
-  clearCompleted() {           //tu javlja error 
+  };
+
+  clearCompleted = () => {
     const { todos } = this.state;
-    const result = todos.filter(item => item.completed==="false");
-    console.log(result);
-    
+    const result = todos? todos.filter(item => item.completed === false) :"";
+    this.setState({
+      todos:result
+    })
+  };
+  newItem = event => {
+    const { todos } = this.state;
+    const addingItem = todos.slice();
+    const newItem = {
+      userId: 1,
+      id: 201,
+      title: event.target.value,
+      completed: false
+    }
+    addingItem.push(newItem);
+    this.setState({
+      todos:addingItem
+    })
+  };
+ updateInput = event => {
+  const { todos } = this.state;
+  const addingItem = todos.slice();
+  const uuidv1 = require('uuid/v1');
+    uuidv1();
+  const newItem = {
+    userId: 1,
+    id: uuidv1(),
+    title: event.target.value,
+    completed: false
+  }
+  addingItem.push(newItem);
+  this.setState({
+    todos:addingItem,
+  })
   }
 
   render() {
     const { todos } = this.state;
-
+    
     return (
       <main className="main wrapper">
         <header className="header">
@@ -46,8 +79,8 @@ export class ToDo extends Component {
           <button className="btn">Clear all</button>
         </header>
         <div className="new">
-          <input className="input" type="text" />
-          <button className="add btn">Add</button>
+          <input onChange={this.updateInput} className="input" type="text" />
+          <button onClick={this.newItem} className="add btn">Add</button>
         </div>
         <nav>
           <ul className="filter-list">
