@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import "./App.css";
-import { EventEmitter } from "events";
 
 export class ToDo extends Component {
   state = {
     todos: undefined,
-    text: ""   //jel bi moglo kako drugacije da dodajemo direktno iz inputa u funkciju newItem
+    text: "", //jel bi moglo kako drugacije da dodajemo direktno iz inputa u funkciju newItem
+    error: "",
+    counter: 0
   };
 
   componentDidMount() {
@@ -22,7 +23,6 @@ export class ToDo extends Component {
   toggleFinished = event => {
     const { todos } = this.state;
     const { clickedId } = event.currentTarget.dataset;
-
     const clickedIndex = todos.findIndex(
       item => item.id === parseInt(clickedId)
     );
@@ -42,6 +42,8 @@ export class ToDo extends Component {
   newItem = event => {
     const { todos } = this.state;
     const { text } = this.state;
+    const { error } = this.state;
+    const{counter}=this.state;
     const addingItem = todos.slice();
     const uuidv1 = require("uuid/v1");
     uuidv1();
@@ -51,20 +53,32 @@ export class ToDo extends Component {
       title: text,
       completed: false
     };
-    addingItem.push(newItem);
+    if(text!==""&&counter<15) { addingItem.push(newItem) }
+      else if(text==="") {this.setState({ error: "Niste unijeli vrijednost" });}
     this.setState({
       todos: addingItem
     });
   };
   updateInput = event => {
-    let text = event.target.value;
+    let { counter } = this.state;
+    let {error} = this.state;
+    let {text}=this.state;
+    counter=text.length+1;
+    let symbol= event.target.value;
+    if(event.target.value.length<counter) counter=counter-2; //zato sto stavlja za brisanje jedan znak vise, a treba 1 manje
+    const empty = (symbol && counter<15) ? this.setState({ error: "" }): "";
+    console.log(counter);
+    const maxCharacter= counter<15? this.setState({ error: "Možete unijeti još "+(14-counter)}) :  this.setState({ error: "Unijeli ste prevelik broj znakova"});
     this.setState({
-      text: text
+      text: symbol,
+      counter: counter
     });
+    
   };
 
   render() {
     const { todos } = this.state;
+    const { error } = this.state;
 
     return (
       <main className="main wrapper">
@@ -78,6 +92,7 @@ export class ToDo extends Component {
             Add
           </button>
         </div>
+        <span>{error}</span>
         <nav>
           <ul className="filter-list">
             <li>
