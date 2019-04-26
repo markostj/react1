@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
+const uuidv1 = require("uuid/v1");
 
 export class ToDo extends Component {
   state = {
@@ -20,7 +21,7 @@ export class ToDo extends Component {
       .catch(error => console.log(error));
   }
 
-  toggleFinished = event => {
+  toggleFinished = event => { //ne treba event moze samo radit s ()
     const { todos } = this.state;
     const { clickedId } = event.currentTarget.dataset;
     const clickedIndex = todos.findIndex(
@@ -33,47 +34,57 @@ export class ToDo extends Component {
   };
 
   clearCompleted = () => {
-    const { todos } = this.state;
-    const result = todos ? todos.filter(item => item.completed === false) : "";
+    let { todos } = this.state;
+    if (todos) {
+      todos = todos.filter(item => !item.completed);
+    }
+
     this.setState({
-      todos: result
+      todos
     });
   };
   newItem = event => {
-    const { todos } = this.state;
-    const { text } = this.state;
-    const { error } = this.state;
-    const{counter}=this.state;
-    const addingItem = todos.slice();
-    const uuidv1 = require("uuid/v1");
-    uuidv1();
+    const { todos, text, counter } = this.state;
     const newItem = {
       userId: 1,
       id: uuidv1(),
       title: text,
       completed: false
     };
-    if(text!==""&&counter<15) { addingItem.push(newItem) }
-      else if(text==="") {this.setState({ error: "Niste unijeli vrijednost" });}
+
+    let {error } = this.state;
+    if(!text){
+      error= "Niste unijeli vrijednost";
+    }
+
+    if (text && counter < 15) {
+      todos.push(newItem);
+    } 
+
     this.setState({
-      todos: addingItem
+      todos,error
     });
   };
+
   updateInput = event => {
     let { counter } = this.state;
-    let {error} = this.state;
-    let {text}=this.state;
-    counter=text.length+1;
-    let symbol= event.target.value;
-    if(event.target.value.length<counter) counter=counter-2; //zato sto stavlja za brisanje jedan znak vise, a treba 1 manje
-    const empty = (symbol && counter<15) ? this.setState({ error: "" }): "";
+    let { error } = this.state;
+    let { text } = this.state;
+    counter = text.length + 1;
+    let symbol = event.target.value;
+    if (symbol.length < counter) { 
+      counter-=2; 
+    } //zato sto stavlja za brisanje jedan znak vise, a treba 1 manje
+    const empty = symbol && counter < 15 ? this.setState({ error: "" }) : "";
     console.log(counter);
-    const maxCharacter= counter<15? this.setState({ error: "Možete unijeti još "+(14-counter)}) :  this.setState({ error: "Unijeli ste prevelik broj znakova"});
+    const maxCharacter =
+      counter < 15
+        ? this.setState( {error: "Možete unijeti još " + (14 - counter) }) //popraviti ostavit sam errore, a settat dolje u setState
+        : this.setState({ error: "Unijeli ste prevelik broj znakova" });
     this.setState({
       text: symbol,
       counter: counter
     });
-    
   };
 
   render() {
