@@ -1,21 +1,26 @@
 import React from "react";
-import { Person, Name } from "./functional-components";
-import { KlasnaKomponenta } from "./class-components";
-import { Counter } from "./Counter";
 import { ToDo } from "./ToDo";
-
+import { ErrorPage } from "./ErrorPage";
+import { Detalji } from "./Detalji";
+import {
+  BrowserRouter,
+  Switch,
+  Redirect,
+  Route,
+  withRouter
+} from "react-router-dom";
+import { AppLayout } from "./components";
 export const App = () => (
   <>
-    {/* <Person firstName={0 + 2} lastName="Perić" />
-    <br />
-    <Name ime="Časlav" />
-    <br />
-    <Person firstName="Ivan" lastName="Ivić" /> */}
-
-    {/* <KlasnaKomponenta ime="Filip" prezime="Filipović" godiste={100} /> */}
-
-    {/* <Counter /> */}
-
-    <ToDo />
+    <BrowserRouter>
+      <AppLayout>
+        <Switch>
+          <Route exact path="/" component={ToDo} />
+          
+          <Route exact path="/detalji" component={Detalji} />
+          <Route component={ErrorPage} />
+        </Switch>
+      </AppLayout>
+    </BrowserRouter>
   </>
 );

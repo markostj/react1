@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import "./App.css";
+import "./css/App.css";
 const uuidv1 = require("uuid/v1");
 
 export class ToDo extends Component {
   state = {
     todos: undefined,
-    text: "", //jel bi moglo kako drugacije da dodajemo direktno iz inputa u funkciju newItem
+    text: "",
     error: "",
     counter: 0
   };
@@ -21,16 +21,22 @@ export class ToDo extends Component {
       .catch(error => console.log(error));
   }
 
-  toggleFinished = event => { //ne treba event moze samo radit s ()
+  toggleFinished = event => {
+    //ne treba event moze samo radit s ()
     const { todos } = this.state;
     const { clickedId } = event.currentTarget.dataset;
-    const clickedIndex = todos.findIndex(
-      item => item.id === parseInt(clickedId)
-    );
-    todos[clickedIndex].completed = !todos[clickedIndex].completed;
-    this.setState({
-      todos: todos
-    });
+    const { history } = this.props;
+    history.push(`/Detalji`);
+    //const clickedIndex = todos.findIndex(
+     // item => item.id === parseInt(clickedId)
+   // );
+   // todos[clickedIndex].completed = !todos[clickedIndex].completed;
+    
+   
+   
+   // this.setState({
+   //   todos: todos
+   // });
   };
 
   clearCompleted = () => {
@@ -52,17 +58,18 @@ export class ToDo extends Component {
       completed: false
     };
 
-    let {error } = this.state;
-    if(!text){
-      error= "Niste unijeli vrijednost";
+    let { error } = this.state;
+    if (!text) {
+      error = "Niste unijeli vrijednost";
     }
 
     if (text && counter < 15) {
       todos.push(newItem);
-    } 
+    }
 
     this.setState({
-      todos,error
+      todos,
+      error
     });
   };
 
@@ -72,18 +79,19 @@ export class ToDo extends Component {
     let { text } = this.state;
     counter = text.length + 1;
     let symbol = event.target.value;
-    if (symbol.length < counter) { 
-      counter-=2; 
+    if (symbol.length < counter) {
+      counter -= 2;
     } //zato sto stavlja za brisanje jedan znak vise, a treba 1 manje
     const empty = symbol && counter < 15 ? this.setState({ error: "" }) : "";
     console.log(counter);
     const maxCharacter =
       counter < 15
-        ? this.setState( {error: "Možete unijeti još " + (14 - counter) }) //popraviti ostavit sam errore, a settat dolje u setState
-        : this.setState({ error: "Unijeli ste prevelik broj znakova" });
+        ? (error = "Možete unijeti još " + (14 - counter))
+        : (error = "Unijeli ste prevelik broj znakova");
     this.setState({
       text: symbol,
-      counter: counter
+      counter: counter,
+      error: error
     });
   };
 
@@ -102,8 +110,9 @@ export class ToDo extends Component {
           <button onClick={this.newItem} className="add btn">
             Add
           </button>
+          <button>nesto</button>
         </div>
-        <span>{error}</span>
+        <span className="error-characters">{error}</span>
         <nav>
           <ul className="filter-list">
             <li>
