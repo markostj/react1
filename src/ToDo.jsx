@@ -1,5 +1,7 @@
-import React, { Component } from "react";
+﻿import React, { Component } from "react";
 import "./css/App.css";
+import { Link } from "react-router-dom";
+
 const uuidv1 = require("uuid/v1");
 
 export class ToDo extends Component {
@@ -9,35 +11,24 @@ export class ToDo extends Component {
     error: "",
     counter: 0
   };
-
-  componentDidMount() {
-    fetch("https://jsonplaceholder.typicode.com/todos")
-      .then(response => response.json())
-      .then(json =>
-        this.setState({
-          todos: json
-        })
-      )
-      .catch(error => console.log(error));
-  }
-
+  renderItem = ({ id, title }) => (
+    <div key={id}>
+      <Link to={`/todos/${id}`}>{title}</Link>
+    </div>
+  );
   toggleFinished = event => {
     //ne treba event moze samo radit s ()
     const { todos } = this.state;
     const { clickedId } = event.currentTarget.dataset;
-    const { history } = this.props;
-    history.push(`/Detalji`);
     //const clickedIndex = todos.findIndex(
-     // item => item.id === parseInt(clickedId)
-   // );
-   // todos[clickedIndex].completed = !todos[clickedIndex].completed;
-    
-   
-   
-   // this.setState({
-   //   todos: todos
-   // });
-  };
+    // item => item.id === parseInt(clickedId)
+    // );
+    // todos[clickedIndex].completed = !todos[clickedIndex].completed;
+
+    // this.setState({
+    //   todos: todos
+    // });
+  }
 
   clearCompleted = () => {
     let { todos } = this.state;
@@ -96,9 +87,8 @@ export class ToDo extends Component {
   };
 
   render() {
-    const { todos } = this.state;
     const { error } = this.state;
-
+    const { todos } = this.props;
     return (
       <main className="main wrapper">
         <header className="header">
@@ -110,7 +100,6 @@ export class ToDo extends Component {
           <button onClick={this.newItem} className="add btn">
             Add
           </button>
-          <button>nesto</button>
         </div>
         <span className="error-characters">{error}</span>
         <nav>
