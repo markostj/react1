@@ -14,7 +14,7 @@ export class App extends Component {
       .then(todos => this.setState({ todos }))
       .catch(error => console.log(error));
   }
-  renderRoute = props => <ToDo {...props} {...this.state} />;
+  renderRoute = Component => props => <Component {...props} {...this.state} />;
 
   render() {
     return (
@@ -22,8 +22,8 @@ export class App extends Component {
         <AppLayout>
           <Switch>
             <Redirect exact from="/" to="todos" />>
-            <Route exact path="/todos"  render={this.renderRoute} />
-            <Route path="todos/:id" render={this.renderRoute} />
+            <Route exact path="/todos"  render={this.renderRoute(ToDo)} />
+            <Route path="todos/:id" render={this.renderRoute(TodosDetails)} />
             <Route component={ErrorPage} />
           </Switch>
         </AppLayout>

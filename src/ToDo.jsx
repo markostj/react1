@@ -41,7 +41,8 @@ export class ToDo extends Component {
     });
   };
   newItem = event => {
-    const { todos, text, counter } = this.state;
+    const {  text, counter } = this.state;
+    const {todos} = this.props;
     const newItem = {
       userId: 1,
       id: uuidv1(),
